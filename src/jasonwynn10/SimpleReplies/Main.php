@@ -91,8 +91,8 @@ class Main extends PluginBase {
 					throw new InvalidCommandSyntaxException();
 				}
 
-				if(!empty($this->plugin->getLastSent($sender->getName()))) {
-					$player = $this->plugin->getServer()->getPlayer($this->plugin->getLastSent($sender->getName()));
+				/** @var CommandSender $player */
+				if(!empty($this->plugin->getLastSent($sender->getName())) or !($player = $this->plugin->getServer()->getPlayer($this->plugin->getLastSent($sender->getName()))) instanceof CommandSender) {
 					$sender->sendMessage("[{$sender->getName()} -> {$player->getDisplayName()}] " . implode(" ", $args));
 					$name = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
 					$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
