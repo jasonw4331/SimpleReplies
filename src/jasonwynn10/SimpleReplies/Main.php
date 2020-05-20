@@ -5,10 +5,12 @@ namespace jasonwynn10\SimpleReplies;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\defaults\VanillaCommand;
+use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\utils\CommandException;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\lang\TranslationContainer;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
@@ -61,7 +63,7 @@ class Main extends PluginBase {
 				return true;
 			}
 		});
-		$this->getServer()->getCommandMap()->register("SimpleReplies", new class("reply", $this) extends Command {
+		$this->getServer()->getCommandMap()->register("SimpleReplies", new class("reply", $this) extends Command implements PluginIdentifiableCommand {
 			private $plugin;
 			public function __construct(string $name, Main $plugin) {
 				$this->plugin = $plugin;
@@ -107,6 +109,10 @@ class Main extends PluginBase {
 				}
 
 				return true;
+			}
+
+			public function getPlugin() : Plugin {
+				return $this->plugin;
 			}
 		});
 	}
