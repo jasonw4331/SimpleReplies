@@ -6,8 +6,6 @@
 # Intro
 SimpleReplies is a plugin which adds a command to easily reply to your last received message.
 
-[![Youtube Video Example](https://img.youtube.com/vi/0asb7zFXpw0/0.jpg)](https://www.youtube.com/watch?v=0asb7zFXpw0?t=60)
-
 # Features
 * adds the command: /reply
 
