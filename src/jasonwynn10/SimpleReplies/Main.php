@@ -8,8 +8,8 @@ use pocketmine\command\defaults\VanillaCommand;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\utils\CommandException;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
-use pocketmine\lang\TranslationContainer;
-use pocketmine\Player;
+use pocketmine\lang\Translatable;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
@@ -18,7 +18,8 @@ class Main extends PluginBase {
 	/** @var string[] $lastSent */
 	private $lastSent;
 
-	public function onEnable() {
+	public function onEnable(): void
+    {
 		/** @var VanillaCommand $tellCommand */
 		$tellCommand = $this->getServer()->getCommandMap()->getCommand("tell");
 		$this->getServer()->getCommandMap()->unregister($tellCommand);
@@ -47,7 +48,7 @@ class Main extends PluginBase {
 				$player = $sender->getServer()->getPlayer(array_shift($args));
 
 				if($player === $sender){
-					$sender->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.message.sameTarget"));
+					$sender->sendMessage(new Translatable(TextFormat::RED . "%commands.message.sameTarget"));
 					return true;
 				}
 
@@ -57,13 +58,13 @@ class Main extends PluginBase {
 					$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
 					$this->plugin->onMessage($sender, $player);
 				}else{
-					$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
+					$sender->sendMessage(new Translatable("commands.generic.player.notFound"));
 				}
 
 				return true;
 			}
 		});
-		$this->getServer()->getCommandMap()->register("SimpleReplies", new class("reply", $this) extends Command implements PluginIdentifiableCommand {
+		$this->getServer()->getCommandMap()->register("SimpleReplies", new class("reply", $this) extends VanillaCommand {
 			private $plugin;
 			public function __construct(string $name, Main $plugin) {
 				$this->plugin = $plugin;
@@ -102,10 +103,10 @@ class Main extends PluginBase {
 							$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
 							$this->plugin->onMessage($sender, $player);
 						}else{
-							$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
+							$sender->sendMessage(new Translatable("commands.generic.player.notFound"));
 						}
 				}else{
-					$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
+					$sender->sendMessage(new Translatable("commands.generic.player.notFound"));
 				}
 
 				return true;
