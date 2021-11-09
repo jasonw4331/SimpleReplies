@@ -74,13 +74,6 @@ class Main extends PluginBase {
 				$this->setPermission("SimpleReplies.reply");
 			}
 
-			/**
-			 * @param CommandSender $sender
-			 * @param string $commandLabel
-			 * @param string[] $args
-			 *
-			 * @throws CommandException
-			 */
 			public function execute(CommandSender $sender, string $commandLabel, array $args) : void {
 				if(!$this->testPermission($sender)) {
 					return;
@@ -111,19 +104,10 @@ class Main extends PluginBase {
 		});
 	}
 
-	/**
-	 * @param CommandSender $sender
-	 * @param Player $receiver
-	 */
 	public function onMessage(CommandSender $sender, Player $receiver) : void {
 		$this->lastSent[$receiver->getName()] = $sender->getName();
 	}
 
-	/**
-	 * @param string $name
-	 *
-	 * @return string
-	 */
 	public function getLastSent(string $name) : string {
 		return $this->lastSent[$name] ?? "";
 	}
