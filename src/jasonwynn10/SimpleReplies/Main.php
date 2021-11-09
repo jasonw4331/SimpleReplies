@@ -12,18 +12,18 @@ use pocketmine\lang\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\TextFormat;
 
 class Main extends PluginBase {
 	/** @var string[] $lastSent */
-	private $lastSent;
+	private array $lastSent;
 
 	public function onEnable() {
-		/** @var VanillaCommand $tellCommand */
-		$tellCommand = $this->getServer()->getCommandMap()->getCommand("tell");
-		$this->getServer()->getCommandMap()->unregister($tellCommand);
-		$this->getServer()->getCommandMap()->register("pocketmine", new class("tell", $this) extends VanillaCommand {
-			private $plugin;
+		$commandMap = $this->getServer()->getCommandMap();
+		$commandMap->unregister($commandMap->getCommand('tell') ?? throw new AssumptionFailedError('Tell command does not exist'));
+		$commandMap->register("pocketmine", new class("tell", $this) extends VanillaCommand {
+			private Main $plugin;
 			public function __construct(string $name, Main $plugin) {
 				$this->plugin = $plugin;
 				parent::__construct(
@@ -35,9 +35,9 @@ class Main extends PluginBase {
 				$this->setPermission("pocketmine.command.tell");
 			}
 
-			public function execute(CommandSender $sender, string $commandLabel, array $args) {
+			public function execute(CommandSender $sender, string $commandLabel, array $args) : void {
 				if(!$this->testPermission($sender)){
-					return true;
+					return;
 				}
 
 				if(count($args) < 2){
@@ -48,7 +48,7 @@ class Main extends PluginBase {
 
 				if($player === $sender){
 					$sender->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.message.sameTarget"));
-					return true;
+					return;
 				}
 
 				if($player instanceof Player){
@@ -59,12 +59,10 @@ class Main extends PluginBase {
 				}else{
 					$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
 				}
-
-				return true;
 			}
 		});
-		$this->getServer()->getCommandMap()->register("SimpleReplies", new class("reply", $this) extends Command implements PluginIdentifiableCommand {
-			private $plugin;
+		$commandMap->register("SimpleReplies", new class("reply", $this) extends Command implements PluginIdentifiableCommand {
+			private Main $plugin;
 			public function __construct(string $name, Main $plugin) {
 				$this->plugin = $plugin;
 				parent::__construct(
@@ -81,20 +79,18 @@ class Main extends PluginBase {
 			 * @param string $commandLabel
 			 * @param string[] $args
 			 *
-			 * @return mixed
 			 * @throws CommandException
 			 */
-			public function execute(CommandSender $sender, string $commandLabel, array $args) {
+			public function execute(CommandSender $sender, string $commandLabel, array $args) : void {
 				if(!$this->testPermission($sender)) {
-					return true;
+					return;
 				}
 
 				if(count($args) < 1) {
 					throw new InvalidCommandSyntaxException();
 				}
 
-				/** @var CommandSender $player */
-				if(!empty($this->plugin->getLastSent($sender->getName()))) {
+				if($this->plugin->getLastSent($sender->getName()) !== "") {
 					$player = $this->plugin->getServer()->getPlayer($this->plugin->getLastSent($sender->getName()));
 						if($player instanceof CommandSender) {
 							$sender->sendMessage("[{$sender->getName()} -> {$player->getDisplayName()}] " . implode(" ", $args));
@@ -107,8 +103,6 @@ class Main extends PluginBase {
 				}else{
 					$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
 				}
-
-				return true;
 			}
 
 			public function getPlugin() : Plugin {
