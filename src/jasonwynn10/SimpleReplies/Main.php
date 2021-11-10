@@ -5,13 +5,13 @@ namespace jasonwynn10\SimpleReplies;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\defaults\VanillaCommand;
-use pocketmine\command\PluginIdentifiableCommand;
-use pocketmine\command\utils\CommandException;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
-use pocketmine\lang\TranslationContainer;
-use pocketmine\Player;
+use pocketmine\lang\KnownTranslationFactory;
+use pocketmine\permission\DefaultPermissionNames;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\PluginOwned;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\TextFormat;
 
@@ -19,20 +19,20 @@ class Main extends PluginBase {
 	/** @var string[] $lastSent */
 	private array $lastSent;
 
-	public function onEnable() {
+	public function onEnable() : void {
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->unregister($commandMap->getCommand('tell') ?? throw new AssumptionFailedError('Tell command does not exist'));
-		$commandMap->register("pocketmine", new class("tell", $this) extends VanillaCommand {
+		$commandMap->register("pocketmine", new class("tell") extends VanillaCommand {
 			private Main $plugin;
-			public function __construct(string $name, Main $plugin) {
+			public function __construct(string $name, Main $plugin){
 				$this->plugin = $plugin;
 				parent::__construct(
 					$name,
-					"%pocketmine.command.tell.description",
-					"%commands.message.usage",
+					KnownTranslationFactory::pocketmine_command_tell_description(),
+					KnownTranslationFactory::commands_message_usage(),
 					["w", "msg"]
 				);
-				$this->setPermission("pocketmine.command.tell");
+				$this->setPermission(DefaultPermissionNames::COMMAND_TELL);
 			}
 
 			public function execute(CommandSender $sender, string $commandLabel, array $args) : void {
@@ -44,24 +44,26 @@ class Main extends PluginBase {
 					throw new InvalidCommandSyntaxException();
 				}
 
-				$player = $sender->getServer()->getPlayer(array_shift($args));
+				$player = $sender->getServer()->getPlayerByPrefix(array_shift($args));
 
 				if($player === $sender){
-					$sender->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.message.sameTarget"));
+					$sender->sendMessage(KnownTranslationFactory::commands_message_sameTarget()->prefix(TextFormat::RED));
 					return;
 				}
 
 				if($player instanceof Player){
-					$sender->sendMessage("[{$sender->getName()} -> {$player->getDisplayName()}] " . implode(" ", $args));
+					$message = implode(" ", $args);
+					$sender->sendMessage(KnownTranslationFactory::commands_message_display_outgoing($player->getDisplayName(), $message)->prefix(TextFormat::GRAY . TextFormat::ITALIC));
 					$name = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
-					$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
+					$player->sendMessage(KnownTranslationFactory::commands_message_display_incoming($name, $message)->prefix(TextFormat::GRAY . TextFormat::ITALIC));
+					Command::broadcastCommandMessage($sender, KnownTranslationFactory::commands_message_display_outgoing($player->getDisplayName(), $message), false);
 					$this->plugin->onMessage($sender, $player);
 				}else{
-					$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
+					$sender->sendMessage(KnownTranslationFactory::commands_generic_player_notFound());
 				}
 			}
 		});
-		$commandMap->register("SimpleReplies", new class("reply", $this) extends Command implements PluginIdentifiableCommand {
+		$commandMap->register("SimpleReplies", new class("reply", $this) extends Command implements PluginOwned {
 			private Main $plugin;
 			public function __construct(string $name, Main $plugin) {
 				$this->plugin = $plugin;
@@ -83,22 +85,20 @@ class Main extends PluginBase {
 					throw new InvalidCommandSyntaxException();
 				}
 
-				if($this->plugin->getLastSent($sender->getName()) !== "") {
-					$player = $this->plugin->getServer()->getPlayer($this->plugin->getLastSent($sender->getName()));
-						if($player instanceof CommandSender) {
-							$sender->sendMessage("[{$sender->getName()} -> {$player->getDisplayName()}] " . implode(" ", $args));
-							$name = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
-							$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
-							$this->plugin->onMessage($sender, $player);
-						}else{
-							$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
-						}
-				}else{
-					$sender->sendMessage(new TranslationContainer("commands.generic.player.notFound"));
+				if($this->plugin->getWhoLastSent($sender->getName()) !== "") {
+					$player = $this->plugin->getServer()->getPlayerExact($this->plugin->getWhoLastSent($sender->getName()));
+					if($player instanceof CommandSender) {
+						$sender->sendMessage("[{$sender->getName()} -> {$player->getDisplayName()}] " . implode(" ", $args));
+						$name = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
+						$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
+						$this->plugin->onMessage($sender, $player);
+						return;
+					}
 				}
+				$sender->sendMessage(KnownTranslationFactory::commands_generic_player_notFound());
 			}
 
-			public function getPlugin() : Plugin {
+			public function getOwningPlugin() : Plugin {
 				return $this->plugin;
 			}
 		});
@@ -108,7 +108,7 @@ class Main extends PluginBase {
 		$this->lastSent[$receiver->getName()] = $sender->getName();
 	}
 
-	public function getLastSent(string $name) : string {
-		return $this->lastSent[$name] ?? "";
+	public function getWhoLastSent(string $recipient) : string {
+		return $this->lastSent[$recipient] ?? "";
 	}
 }
