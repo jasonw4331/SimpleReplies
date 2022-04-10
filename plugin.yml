@@ -1,6 +1,7 @@
 name: SimpleReplies
 main: jasonwynn10\SimpleReplies\Main
-version: 0.1.1
+src-namespace-prefix: jasonwynn10\SimpleReplies
+version: 1.0.0
 api: 4.0.0
 author: "jasonwynn10"
 description: "Adds a command to reply to the last person who messaged you"
