@@ -22,7 +22,7 @@ class Main extends PluginBase {
 	public function onEnable() : void {
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->unregister($commandMap->getCommand('tell') ?? throw new AssumptionFailedError('Tell command does not exist'));
-		$commandMap->register("pocketmine", new class("tell", $this) extends VanillaCommand {
+		$commandMap->register($this->getName(), new class("tell", $this) extends VanillaCommand {
 			private Main $plugin;
 			public function __construct(string $name, Main $plugin){
 				$this->plugin = $plugin;
@@ -63,7 +63,7 @@ class Main extends PluginBase {
 				}
 			}
 		});
-		$commandMap->register("SimpleReplies", new class("reply", $this) extends Command implements PluginOwned {
+		$commandMap->register($this->getName(), new class("reply", $this) extends Command implements PluginOwned {
 			private Main $plugin;
 			public function __construct(string $name, Main $plugin) {
 				$this->plugin = $plugin;
