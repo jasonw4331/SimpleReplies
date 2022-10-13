@@ -9,9 +9,9 @@ use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\lang\KnownTranslationFactory;
 use pocketmine\permission\DefaultPermissionNames;
 use pocketmine\player\Player;
-use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
+use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\TextFormat;
 
@@ -22,16 +22,17 @@ class Main extends PluginBase {
 	public function onEnable() : void {
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->unregister($commandMap->getCommand('tell') ?? throw new AssumptionFailedError('Tell command does not exist'));
-		$commandMap->register($this->getName(), new class("tell", $this) extends VanillaCommand {
+		$commandMap->register($this->getName(), new class("tell", $this) extends VanillaCommand implements PluginOwned {
+			use PluginOwnedTrait;
 			private Main $plugin;
-			public function __construct(string $name, Main $plugin){
-				$this->plugin = $plugin;
+			public function __construct(string $name, Main $owningPlugin){
 				parent::__construct(
 					$name,
 					KnownTranslationFactory::pocketmine_command_tell_description(),
 					KnownTranslationFactory::commands_message_usage(),
 					["w", "msg"]
 				);
+				$this->owningPlugin = $owningPlugin;
 				$this->setPermission(DefaultPermissionNames::COMMAND_TELL);
 			}
 
@@ -64,15 +65,16 @@ class Main extends PluginBase {
 			}
 		});
 		$commandMap->register($this->getName(), new class("reply", $this) extends Command implements PluginOwned {
+			use PluginOwnedTrait;
 			private Main $plugin;
-			public function __construct(string $name, Main $plugin) {
-				$this->plugin = $plugin;
+			public function __construct(string $name, Main $owningPlugin) {
 				parent::__construct(
 					$name,
 					"Reply to the last received message",
 					"/r <message: string>",
 					["r"]
 				);
+				$this->owningPlugin = $owningPlugin;
 				$this->setPermission("SimpleReplies.reply");
 			}
 
@@ -96,10 +98,6 @@ class Main extends PluginBase {
 					}
 				}
 				$sender->sendMessage(KnownTranslationFactory::commands_generic_player_notFound());
-			}
-
-			public function getOwningPlugin() : Plugin {
-				return $this->plugin;
 			}
 		});
 	}
