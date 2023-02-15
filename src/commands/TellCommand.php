@@ -44,20 +44,24 @@ class TellCommand extends VanillaCommand implements PluginOwned{
 			throw new InvalidCommandSyntaxException();
 		}
 
-		$player = $sender->getServer()->getPlayerByPrefix(array_shift($args));
+		$search = array_shift($args);
 
-		if($player === $sender){
+		$found = str_contains(mb_strtoupper($search), Main::getConsoleCommandSender()->getName()) ?
+			Main::getConsoleCommandSender() :
+			$sender->getServer()->getPlayerByPrefix($search);
+
+		if($found === $sender){
 			$sender->sendMessage(KnownTranslationFactory::commands_message_sameTarget()->prefix(TextFormat::RED));
 			return;
 		}
 
-		if($player instanceof Player){
+		if($found instanceof CommandSender){
 			$message = implode(" ", $args);
-			$sender->sendMessage(KnownTranslationFactory::commands_message_display_outgoing($player->getDisplayName(), $message)->prefix(TextFormat::GRAY . TextFormat::ITALIC));
+			$sender->sendMessage(KnownTranslationFactory::commands_message_display_outgoing($found->getDisplayName(), $message)->prefix(TextFormat::GRAY . TextFormat::ITALIC));
 			$name = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
-			$player->sendMessage(KnownTranslationFactory::commands_message_display_incoming($name, $message)->prefix(TextFormat::GRAY . TextFormat::ITALIC));
-			Command::broadcastCommandMessage($sender, KnownTranslationFactory::commands_message_display_outgoing($player->getDisplayName(), $message), false);
-			$this->owningPlugin->onMessage($sender, $player);
+			$found->sendMessage(KnownTranslationFactory::commands_message_display_incoming($name, $message)->prefix(TextFormat::GRAY . TextFormat::ITALIC));
+			Command::broadcastCommandMessage($sender, KnownTranslationFactory::commands_message_display_outgoing($found->getDisplayName(), $message), false);
+			$this->owningPlugin->onMessage($sender, $found);
 		}else{
 			$sender->sendMessage(KnownTranslationFactory::commands_generic_player_notFound());
 		}

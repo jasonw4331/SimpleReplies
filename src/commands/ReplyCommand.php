@@ -12,8 +12,12 @@ use pocketmine\lang\KnownTranslationFactory;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
+use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 use function count;
 use function implode;
+use function mb_strtoupper;
+use function str_contains;
 
 class ReplyCommand extends Command implements PluginOwned{
 	use PluginOwnedTrait {
@@ -40,13 +44,17 @@ class ReplyCommand extends Command implements PluginOwned{
 			throw new InvalidCommandSyntaxException();
 		}
 
-		if($this->owningPlugin->getWhoLastSent($sender->getName()) !== ""){
-			$player = $this->owningPlugin->getServer()->getPlayerExact($this->owningPlugin->getWhoLastSent($sender->getName()));
-			if($player instanceof CommandSender){
-				$sender->sendMessage("[{$sender->getName()} -> {$player->getDisplayName()}] " . implode(" ", $args));
-				$name = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
-				$player->sendMessage("[$name -> {$player->getName()}] " . implode(" ", $args));
-				$this->owningPlugin->onMessage($sender, $player);
+		$lastSent = $this->owningPlugin->getWhoLastSent($sender);
+		if($lastSent !== ""){
+			$found = str_contains(mb_strtoupper($lastSent), Main::getConsoleCommandSender()->getName()) ?
+				Main::getConsoleCommandSender() :
+				Server::getInstance()->getPlayerExact($lastSent);
+			if($found instanceof CommandSender){
+				$foundName = $found instanceof Player ? $found->getDisplayName() : $found->getName();
+				$sender->sendMessage("[{$sender->getName()} -> $foundName" . TextFormat::RESET . "] " . implode(" ", $args));
+				$senderName = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
+				$found->sendMessage("[$senderName" . TextFormat::RESET . " -> {$found->getName()}] " . implode(" ", $args));
+				$this->owningPlugin->onMessage($sender, $found);
 				return;
 			}
 		}

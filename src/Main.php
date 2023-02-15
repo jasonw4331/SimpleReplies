@@ -107,12 +107,12 @@ class Main extends PluginBase implements Listener{
 		return self::$languages;
 	}
 
-	public function onMessage(CommandSender $sender, Player $receiver) : void {
+	public function onMessage(CommandSender $sender, CommandSender $receiver) : void{
 		$this->lastSent[$receiver->getName()] = $sender->getName();
 	}
 
-	public function getWhoLastSent(string $recipient) : string {
-		return $this->lastSent[$recipient] ?? "";
+	public function getWhoLastSent(CommandSender $recipient) : string{
+		return $this->lastSent[$recipient->getName()] ?? "";
 	}
 
 	public static function getConsoleCommandSender() : ConsoleCommandSender{
