@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace jasonwynn10\SimpleReplies;
 
 use pocketmine\command\CommandSender;
+use pocketmine\console\ConsoleCommandSender;
 use pocketmine\event\EventPriority;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -20,8 +21,16 @@ use function yaml_parse_file;
 class Main extends PluginBase implements Listener{
 	/** @var array<string, Language> $languages */
 	private static array $languages = [];
+	private static ConsoleCommandSender $consoleCommandSender;
 	/** @var string[] $lastSent */
 	private array $lastSent;
+
+	public function onLoad() : void{
+		foreach($this->getServer()->getBroadcastChannelSubscribers(Server::BROADCAST_CHANNEL_ADMINISTRATIVE) as $sender){
+			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
+			self::$consoleCommandSender = $sender; // we know there is only 1 broadcast subscriber at this point: The console.
+		}
+	}
 
 	public function onEnable() : void{
 		// register commands
@@ -104,5 +113,9 @@ class Main extends PluginBase implements Listener{
 
 	public function getWhoLastSent(string $recipient) : string {
 		return $this->lastSent[$recipient] ?? "";
+	}
+
+	public static function getConsoleCommandSender() : ConsoleCommandSender{
+		return self::$consoleCommandSender;
 	}
 }
