@@ -76,7 +76,7 @@ function generate_known_translation_keys(array $languageDefinitions) : void{
 	echo SHARED_HEADER;
 	echo <<<'HEADER'
 /**
- * This class contains constants for all the translations known to PoliteTeleports.
+ * This class contains constants for all the translations known to SimpleReplies.
  * This class is generated automatically, do NOT modify it by hand.
  *
  * @internal
@@ -112,7 +112,7 @@ function generate_known_translation_factory(array $languageDefinitions) : void{
 use pocketmine\lang\Translatable;
 
 /**
- * This class contains factory methods for all the translations known to PoliteTeleports.
+ * This class contains factory methods for all the translations known to SimpleReplies.
  * This class is generated automatically, do NOT modify it by hand.
  *
  * @internal

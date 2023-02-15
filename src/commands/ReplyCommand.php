@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace jasonwynn10\SimpleReplies\commands;
 
+use jasonwynn10\SimpleReplies\lang\CustomKnownTranslationFactory;
 use jasonwynn10\SimpleReplies\Main;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -27,8 +28,8 @@ class ReplyCommand extends Command implements PluginOwned{
 	public function __construct(string $name, Main $owningPlugin){
 		parent::__construct(
 			$name,
-			"Reply to the last received message",
-			"/r <message: string>",
+			CustomKnownTranslationFactory::command_reply_description(),
+			CustomKnownTranslationFactory::command_reply_usage(),
 			["r"]
 		);
 		$this->setOwningPlugin($owningPlugin);
@@ -51,9 +52,9 @@ class ReplyCommand extends Command implements PluginOwned{
 				Server::getInstance()->getPlayerExact($lastSent);
 			if($found instanceof CommandSender){
 				$foundName = $found instanceof Player ? $found->getDisplayName() : $found->getName();
-				$sender->sendMessage("[{$sender->getName()} -> $foundName" . TextFormat::RESET . "] " . implode(" ", $args));
+				$sender->sendMessage(CustomKnownTranslationFactory::command_reply_success($sender->getName(), $foundName . TextFormat::RESET)->postfix(implode(" ", $args)));
 				$senderName = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
-				$found->sendMessage("[$senderName" . TextFormat::RESET . " -> {$found->getName()}] " . implode(" ", $args));
+				$found->sendMessage(CustomKnownTranslationFactory::command_reply_success($senderName . TextFormat::RESET, $found->getName())->postfix(implode(" ", $args)));
 				$this->owningPlugin->onMessage($sender, $found);
 				return;
 			}
