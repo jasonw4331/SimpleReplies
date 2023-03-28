@@ -11,7 +11,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\lang\Language;
 use pocketmine\plugin\PluginBase;
-use pocketmine\Server;
 use pocketmine\utils\AssumptionFailedError;
 use Symfony\Component\Filesystem\Path;
 use function array_merge;
@@ -23,18 +22,17 @@ use function yaml_parse_file;
 class Main extends PluginBase implements Listener{
 	/** @var array<string, Language> $languages */
 	private static array $languages = [];
-	private static ConsoleCommandSender $consoleCommandSender;
+	private static ?ConsoleCommandSender $consoleCommandSender;
 	/** @var string[] $lastSent */
 	private array $lastSent;
 
-	public function onLoad() : void{
-		foreach($this->getServer()->getBroadcastChannelSubscribers(Server::BROADCAST_CHANNEL_ADMINISTRATIVE) as $sender){
-			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-			self::$consoleCommandSender = $sender; // we know there is only 1 broadcast subscriber at this point: The console.
-		}
-	}
-
 	public function onEnable() : void{
+		// use reflection to access console sender from server
+		$reflection = new \ReflectionClass($this->getServer());
+		$property = $reflection->getProperty('consoleSender');
+		$property->setAccessible(true);
+		self::$consoleCommandSender = $property->getValue($this->getServer());
+
 		// register commands
 		$commandMap = $this->getServer()->getCommandMap();
 		$commandMap->unregister($commandMap->getCommand('tell') ?? throw new AssumptionFailedError('Tell command does not exist'));
@@ -117,7 +115,7 @@ class Main extends PluginBase implements Listener{
 		return $this->lastSent[$recipient->getName()] ?? "";
 	}
 
-	public static function getConsoleCommandSender() : ConsoleCommandSender{
+	public static function getConsoleCommandSender() : ?ConsoleCommandSender{
 		return self::$consoleCommandSender;
 	}
 }
