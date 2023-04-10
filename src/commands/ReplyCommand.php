@@ -69,6 +69,6 @@ class ReplyCommand extends Command implements PluginOwned{
 				return;
 			}
 		}
-		$sender->sendMessage(KnownTranslationFactory::commands_generic_player_notFound());
+		$sender->sendMessage(KnownTranslationFactory::commands_generic_player_notFound()->prefix(TextFormat::RED));
 	}
 }
