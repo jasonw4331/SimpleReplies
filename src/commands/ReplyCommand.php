@@ -52,9 +52,19 @@ class ReplyCommand extends Command implements PluginOwned{
 				Server::getInstance()->getPlayerExact($lastSent);
 			if($found instanceof CommandSender){
 				$foundName = $found instanceof Player ? $found->getDisplayName() : $found->getName();
-				$sender->sendMessage(CustomKnownTranslationFactory::command_reply_success($sender->getName(), $foundName . TextFormat::RESET)->postfix(implode(" ", $args)));
+				$sender->sendMessage(
+					$sender->getLanguage()->translate(
+						CustomKnownTranslationFactory::command_reply_success($sender->getName(), $foundName . TextFormat::RESET)
+							->postfix(implode(" ", $args))
+					)
+				);
 				$senderName = $sender instanceof Player ? $sender->getDisplayName() : $sender->getName();
-				$found->sendMessage(CustomKnownTranslationFactory::command_reply_success($senderName . TextFormat::RESET, $found->getName())->postfix(implode(" ", $args)));
+				$found->sendMessage(
+					$found->getLanguage()->translate(
+						CustomKnownTranslationFactory::command_reply_success($senderName . TextFormat::RESET, $found->getName())
+							->postfix(implode(" ", $args))
+					)
+				);
 				$this->owningPlugin->onMessage($sender, $found);
 				return;
 			}
