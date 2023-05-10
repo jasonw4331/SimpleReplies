@@ -1,6 +1,5 @@
 {
 	"name": "jasonw4331/simplereplies",
-	"version": "1.0.0",
 	"description": "A PocketMine plugins which adds a command to reply to the last person who messaged you",
 	"type": "library",
 	"license": "lgpl-3.0-or-later",
