@@ -16,7 +16,7 @@ assignees: ''
 1. ...
 2. ...
 
-### OS and versions
+### Version Information
 <!-- try the `plugins` and `version` command | LATEST IS NOT A VALID VERSION -->
 * Plugin Version:
 * PocketMine-MP:

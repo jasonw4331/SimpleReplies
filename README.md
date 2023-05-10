@@ -1,6 +1,6 @@
 # SimpleReplies
-[![Discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/tZQMhBQ)
-[![Poggit-Ci](https://poggit.pmmp.io/ci.shield/jasonwynn10/SimpleReplies/SimpleReplies)](https://poggit.pmmp.io/ci/jasonwynn10/SimpleReplies/SimpleReplies)
+[![Discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/R7kdetE)
+[![Poggit-Ci](https://poggit.pmmp.io/ci.shield/jasonw4331/SimpleReplies/SimpleReplies)](https://poggit.pmmp.io/ci/jasonw4331/SimpleReplies/SimpleReplies)
 [![Download count](https://poggit.pmmp.io/shield.dl.total/SimpleReplies)](https://poggit.pmmp.io/p/SimpleReplies)
 
 # Intro
