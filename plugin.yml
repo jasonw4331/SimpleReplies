@@ -1,9 +1,9 @@
 name: SimpleReplies
-main: jasonwynn10\SimpleReplies\Main
-src-namespace-prefix: jasonwynn10\SimpleReplies
+main: jasonw4331\SimpleReplies\Main
+src-namespace-prefix: jasonw4331\SimpleReplies
 version: 1.0.0
 api: 4.0.0
-author: "jasonwynn10"
+author: "jasonw4331"
 description: "Adds a command to reply to the last person who messaged you"
 permissions:
   SimpleReplies.reply:

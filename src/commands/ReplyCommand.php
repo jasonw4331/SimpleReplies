@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace jasonwynn10\SimpleReplies\commands;
+namespace jasonw4331\SimpleReplies\commands;
 
-use jasonwynn10\SimpleReplies\lang\CustomKnownTranslationFactory;
-use jasonwynn10\SimpleReplies\Main;
+use jasonw4331\SimpleReplies\lang\CustomKnownTranslationFactory;
+use jasonw4331\SimpleReplies\Main;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;

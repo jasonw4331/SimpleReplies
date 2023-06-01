@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace jasonwynn10\SimpleReplies;
+namespace jasonw4331\SimpleReplies;
 
 use pocketmine\command\CommandSender;
 use pocketmine\console\ConsoleCommandSender;

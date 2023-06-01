@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace jasonwynn10\SimpleReplies\lang;
+namespace jasonw4331\SimpleReplies\lang;
 
 /**
  * This class contains constants for all the translations known to SimpleReplies.

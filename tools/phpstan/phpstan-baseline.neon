@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Static property jasonwynn10\\\\SimpleReplies\\\\Main\\:\\:\\$consoleCommandSender \\(pocketmine\\\\console\\\\ConsoleCommandSender\\) does not accept pocketmine\\\\command\\\\CommandSender\\.$#"
+			message: "#^Static property jasonw4331\\\\SimpleReplies\\\\Main\\:\\:\\$consoleCommandSender \\(pocketmine\\\\console\\\\ConsoleCommandSender\\) does not accept pocketmine\\\\command\\\\CommandSender\\.$#"
 			count: 1
 			path: ../../src/Main.php
 

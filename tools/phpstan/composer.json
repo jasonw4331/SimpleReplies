@@ -1,5 +1,5 @@
 {
-	"name": "jasonwynn10/phpstan-plugin-config",
+	"name": "jasonw4331/phpstan-plugin-config",
 	"require": {
 		"phpstan/phpstan": "^1.10.4",
 		"pocketmine/pocketmine-mp": "^5.0.0-BETA1",
@@ -9,7 +9,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"jasonwynn10\\SimpleReplies\\": "../../src"
+			"jasonw4331\\SimpleReplies\\": "../../src"
 		}
 	},
 	"config": {
