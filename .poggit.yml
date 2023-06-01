@@ -5,10 +5,9 @@ projects:
     icon: "icon.png"
     lint: false
     excludeDirs:
-      - tests
       - .github
       - build
-      - phpstan
+      - tools
     excludeFiles:
       - .gitignore
       - CONTRIBUTING.md
