@@ -13,6 +13,8 @@ use pocketmine\lang\Language;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\AssumptionFailedError;
+use pocketmine\utils\Utils;
+use ReflectionClass;
 use Symfony\Component\Filesystem\Path;
 use function array_merge;
 use function mb_strtolower;
@@ -21,8 +23,6 @@ use function scandir;
 use function yaml_parse_file;
 
 class Main extends PluginBase implements Listener{
-	/** @var array<string, Language> $languages */
-	private static array $languages = [];
 	private static ConsoleCommandSender $consoleCommandSender;
 	/** @var string[] $lastSent */
 	private array $lastSent;
@@ -61,6 +61,7 @@ class Main extends PluginBase implements Listener{
 			$languageAliases[$mini] = $language;
 		}
 
+		$languages = [];
 		$dir = scandir(Path::join($this->getDataFolder(), "lang", "data"));
 		if($dir !== false){
 			foreach($dir as $file){
@@ -74,10 +75,10 @@ class Main extends PluginBase implements Listener{
 					$languageName,
 					Path::join($this->getDataFolder(), "lang", "data")
 				);
-				self::$languages[$languageName] = $language;
-				foreach($languageAliases as $languageAlias => $alias){
+				$languages[$languageName] = $language;
+				foreach(Utils::stringifyKeys($languageAliases) as $languageAlias => $alias){
 					if(mb_strtolower($alias) === $languageName){
-						self::$languages[mb_strtolower($languageAlias)] = $language;
+						$languages[mb_strtolower($languageAlias)] = $language;
 						unset($languageAliases[$languageAlias]);
 					}
 				}
@@ -86,27 +87,13 @@ class Main extends PluginBase implements Listener{
 
 		// add translations to existing server language instance
 		$languageA = $this->getServer()->getLanguage();
-		$refClass = new \ReflectionClass($languageA);
+		$refClass = new ReflectionClass($languageA::class);
 		$refPropA = $refClass->getProperty('lang');
-		$refPropA->setAccessible(true);
 		/** @var string[] $langA */
 		$langA = $refPropA->getValue($languageA);
-
-		$languageB = self::$languages[$languageA->getLang()];
-		$refClass = new \ReflectionClass($languageB);
-		$refPropB = $refClass->getProperty('lang');
-		$refPropB->setAccessible(true);
 		/** @var string[] $langB */
-		$langB = $refPropB->getValue($languageB);
-
+		$langB = $refClass->getProperty('lang')->getValue($languages[$languageA->getLang()]);
 		$refPropA->setValue($languageA, array_merge($langA, $langB));
-	}
-
-	/**
-	 * @return array<string, Language>
-	 */
-	public static function getLanguages() : array{
-		return self::$languages;
 	}
 
 	public function onMessage(CommandSender $sender, CommandSender $receiver) : void{
