@@ -1,7 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Static property jasonw4331\\\\SimpleReplies\\\\Main\\:\\:\\$consoleCommandSender \\(pocketmine\\\\console\\\\ConsoleCommandSender\\) does not accept pocketmine\\\\command\\\\CommandSender\\.$#"
+			message: "#^Method jasonw4331\\\\SimpleReplies\\\\Main\\:\\:getConsoleCommandSender\\(\\) should return pocketmine\\\\console\\\\ConsoleCommandSender but returns mixed\\.$#"
+			count: 1
+			path: ../../src/Main.php
+
+		-
+			message: "#^Static property jasonw4331\\\\SimpleReplies\\\\Main\\:\\:\\$consoleCommandSender \\(pocketmine\\\\console\\\\ConsoleCommandSender\\) does not accept mixed\\.$#"
 			count: 1
 			path: ../../src/Main.php
 
@@ -24,4 +29,3 @@ parameters:
 			message: "#^Call to an undefined method pocketmine\\\\plugin\\\\Plugin\\:\\:onMessage\\(\\)\\.$#"
 			count: 1
 			path: ../../src/commands/TellCommand.php
-
