@@ -3,7 +3,6 @@ projects:
   SimpleReplies:
     path: ""
     icon: "icon.png"
-    lint: false
     excludeDirs:
       - .github
       - build
