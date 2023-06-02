@@ -19,7 +19,7 @@
 		"pocketmine/pocketmine-mp": "^5.0|^4.0",
 		"phpstan/phpstan-strict-rules": "^1.0",
 		"phpstan/extension-installer": "^1.0",
-		"symfony/filesystem": "^5.4",
+		"symfony/filesystem": "^6.0",
 		"friendsofphp/php-cs-fixer": "^3.11"
 	},
 	"config": {
