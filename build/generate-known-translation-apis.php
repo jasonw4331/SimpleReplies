@@ -66,7 +66,7 @@ namespace jasonw4331\SimpleReplies\lang;
 HEADER;
 
 /**
- * @param string[]                      $languageDefinitions
+ * @param string[] $languageDefinitions
  *
  * @phpstan-param array<string, string> $languageDefinitions
  */
@@ -100,7 +100,7 @@ HEADER;
 }
 
 /**
- * @param string[]                      $languageDefinitions
+ * @param string[] $languageDefinitions
  *
  * @phpstan-param array<string, string> $languageDefinitions
  */

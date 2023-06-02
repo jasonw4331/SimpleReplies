@@ -6,9 +6,11 @@ projects:
     excludeDirs:
       - .github
       - build
-      - tools
     excludeFiles:
       - .gitignore
       - CONTRIBUTING.md
       - SECURITY.md
+      - phpstan.neon.dist
+      - phpstan-baseline.php
+      - .php-cs-fixer.php
 ...

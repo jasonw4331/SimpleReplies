@@ -18,6 +18,8 @@ use pocketmine\utils\TextFormat;
 use function array_shift;
 use function count;
 use function implode;
+use function mb_strtoupper;
+use function str_contains;
 
 class TellCommand extends VanillaCommand implements PluginOwned{
 	use PluginOwnedTrait {
