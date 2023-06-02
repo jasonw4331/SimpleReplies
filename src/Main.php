@@ -27,13 +27,6 @@ class Main extends PluginBase implements Listener{
 	/** @var string[] $lastSent */
 	private array $lastSent;
 
-	public function onLoad() : void{
-		foreach($this->getServer()->getBroadcastChannelSubscribers(Server::BROADCAST_CHANNEL_ADMINISTRATIVE) as $sender){
-			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-			self::$consoleCommandSender = $sender; // we know there is only 1 broadcast subscriber at this point: The console.
-		}
-	}
-
 	public function onEnable() : void{
 		// register commands
 		$commandMap = $this->getServer()->getCommandMap();
@@ -105,6 +98,7 @@ class Main extends PluginBase implements Listener{
 	}
 
 	public static function getConsoleCommandSender() : ConsoleCommandSender{
+		self::$consoleCommandSender ??= (new ReflectionClass(Server::getInstance()))->getProperty('consoleSender')->getValue(Server::getInstance());
 		return self::$consoleCommandSender;
 	}
 }
