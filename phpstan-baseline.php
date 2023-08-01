@@ -2,12 +2,12 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
-	'message' => '#^Method jasonw4331\\\\SimpleReplies\\\\Main\\:\\:getConsoleCommandSender\\(\\) should return pocketmine\\\\console\\\\ConsoleCommandSender but returns mixed\\.$#',
+	'message' => '#^Method jasonw4331\\\\SimpleReplies\\\\Main\\:\\:getConsoleCommandSender\\(\\) should return pocketmine\\\\console\\\\ConsoleCommandSender\\|null but returns mixed\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Main.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Static property jasonw4331\\\\SimpleReplies\\\\Main\\:\\:\\$consoleCommandSender \\(pocketmine\\\\console\\\\ConsoleCommandSender\\) does not accept mixed\\.$#',
+	'message' => '#^Static property jasonw4331\\\\SimpleReplies\\\\Main\\:\\:\\$consoleCommandSender \\(pocketmine\\\\console\\\\ConsoleCommandSender\\|null\\) does not accept mixed\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/src/Main.php',
 ];
