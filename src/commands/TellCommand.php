@@ -48,7 +48,7 @@ class TellCommand extends VanillaCommand implements PluginOwned{
 
 		$search = array_shift($args);
 
-		$found = str_contains(mb_strtoupper($search), Main::getConsoleCommandSender()->getName()) ?
+		$found = str_contains(mb_strtoupper($search), "CONSOLE") ?
 			Main::getConsoleCommandSender() :
 			$sender->getServer()->getPlayerByPrefix($search);
 

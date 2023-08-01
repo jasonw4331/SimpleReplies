@@ -47,7 +47,7 @@ class ReplyCommand extends Command implements PluginOwned{
 
 		$lastSent = $this->owningPlugin->getWhoLastSent($sender);
 		if($lastSent !== ""){
-			$found = str_contains(mb_strtoupper($lastSent), Main::getConsoleCommandSender()->getName()) ?
+			$found = str_contains(mb_strtoupper($lastSent), "CONSOLE") ?
 				Main::getConsoleCommandSender() :
 				Server::getInstance()->getPlayerExact($lastSent);
 			if($found instanceof CommandSender){

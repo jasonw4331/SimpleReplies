@@ -23,7 +23,7 @@ use function scandir;
 use function yaml_parse_file;
 
 class Main extends PluginBase implements Listener{
-	private static ConsoleCommandSender $consoleCommandSender;
+	private static ?ConsoleCommandSender $consoleCommandSender;
 	/** @var string[] $lastSent */
 	private array $lastSent;
 
@@ -97,7 +97,7 @@ class Main extends PluginBase implements Listener{
 		return $this->lastSent[$recipient->getName()] ?? "";
 	}
 
-	public static function getConsoleCommandSender() : ConsoleCommandSender{
+	public static function getConsoleCommandSender() : ?ConsoleCommandSender{
 		self::$consoleCommandSender ??= (new ReflectionClass(Server::getInstance()))->getProperty('consoleSender')->getValue(Server::getInstance());
 		return self::$consoleCommandSender;
 	}
